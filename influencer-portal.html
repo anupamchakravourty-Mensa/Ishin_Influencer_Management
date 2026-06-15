@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ishin × BRND.ME — Influencer Gifting</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --saffron:#E8732A; --saffron-lt:#FBE8D8; --maroon:#8B1A2B;
+    --gold:#C9952A; --gold-lt:#FDF3DC; --ivory:#FDFAF5;
+    --off:#F5F0E8; --border:#E8DDC8; --ink:#1C1208;
+    --muted:#7A6A52; --white:#FFFFFF;
+  }
+  body { font-family:'Nunito Sans',sans-serif; background:var(--ivory); color:var(--ink); min-height:100vh; overflow-x:hidden; }
+
+  /* LOADER */
+  .page-loader { position:fixed; inset:0; background:var(--maroon); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:9999; transition:opacity 0.5s ease; }
+  .page-loader.hide { opacity:0; pointer-events:none; }
+  .loader-logo { font-family:'Playfair Display',serif; font-size:32px; font-weight:700; color:var(--white); margin-bottom:8px; }
+  .loader-sub { font-size:11px; letter-spacing:0.2em; text-transform:uppercase; color:rgba(255,255,255,0.6); margin-bottom:40px; }
+  .loader-bar { width:180px; height:2px; background:rgba(255,255,255,0.15); border-radius:2px; overflow:hidden; }
+  .loader-bar-fill { height:100%; background:var(--gold); border-radius:2px; animation:loadFill 1.8s ease forwards; }
+  @keyframes loadFill { from{width:0} to{width:100%} }
+  .loader-text { font-size:11px; color:rgba(255,255,255,0.45); margin-top:14px; letter-spacing:0.08em; }
+
+  /* ERROR */
+  .error-banner { display:none; background:#FAD7D7; border-bottom:1px solid #e0aaaa; padding:12px 40px; font-size:13px; color:#8B1A2B; gap:10px; align-items:center; }
+  .error-banner.show { display:flex; }
+
+  /* TOP BAR */
+  .top-bar { background:var(--maroon); color:rgba(255,255,255,0.88); text-align:center; font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase; padding:9px 20px; font-weight:600; }
+
+  /* HEADER */
+  header { position:sticky; top:0; z-index:100; background:var(--ivory); border-bottom:1px solid var(--border); }
+  .header-inner { max-width:1280px; margin:0 auto; padding:0 40px; height:74px; display:flex; align-items:center; justify-content:space-between; }
+  .logo-block { display:flex; flex-direction:column; gap:2px; }
+  .logo-main { font-family:'Playfair Display',serif; font-size:20px; font-weight:700; color:var(--maroon); letter-spacing:0.04em; line-height:1; }
+  .logo-sub { font-size:9.5px; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); font-weight:600; }
+  .header-divider { width:1px; height:32px; background:var(--border); margin:0 20px; }
+  .brndme-badge { font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:var(--muted); font-weight:600; }
+  .header-left { display:flex; align-items:center; }
+  .cart-btn { background:var(--saffron); color:var(--white); border:none; padding:11px 24px; font-family:'Nunito Sans',sans-serif; font-size:12px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; display:flex; align-items:center; gap:10px; border-radius:2px; transition:background 0.2s,transform 0.15s; }
+  .cart-btn:hover { background:#CF621E; transform:translateY(-1px); }
+  .cart-count { background:var(--maroon); color:white; border-radius:50%; width:20px; height:20px; font-size:11px; display:flex; align-items:center; justify-content:center; font-weight:700; }
+
+  /* HERO */
+  .hero { background:linear-gradient(135deg,var(--maroon) 0%,#5C1020 100%); position:relative; overflow:hidden; padding:72px 40px 64px; }
+  .hero::before { content:''; position:absolute; inset:0; background-image:radial-gradient(circle at 80% 20%,rgba(201,149,42,0.18) 0%,transparent 50%),radial-gradient(circle at 10% 80%,rgba(232,115,42,0.15) 0%,transparent 40%); }
+  .hero-deco { position:absolute; right:-80px; top:-80px; width:480px; height:480px; border-radius:50%; border:1px solid rgba(201,149,42,0.2); pointer-events:none; }
+  .hero-deco::before { content:''; position:absolute; inset:40px; border-radius:50%; border:1px solid rgba(201,149,42,0.15); }
+  .hero-deco::after { content:''; position:absolute; inset:80px; border-radius:50%; border:1px solid rgba(201,149,42,0.1); }
+  .hero-content { position:relative; max-width:620px; }
+  .hero-eyebrow { display:inline-flex; align-items:center; gap:10px; font-size:11px; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); font-weight:600; margin-bottom:20px; }
+  .hero-eyebrow::before,.hero-eyebrow::after { content:'◆'; font-size:6px; opacity:0.6; }
+  .hero h1 { font-family:'Playfair Display',serif; font-size:54px; font-weight:700; line-height:1.08; color:var(--white); margin-bottom:20px; }
+  .hero h1 em { font-style:italic; color:var(--gold); }
+  .hero p { font-size:15px; color:rgba(255,255,255,0.72); line-height:1.7; font-weight:300; max-width:480px; }
+  .hero-pills { display:flex; gap:10px; margin-top:28px; flex-wrap:wrap; }
+  .hero-pill { padding:6px 16px; border:1px solid rgba(201,149,42,0.4); color:rgba(255,255,255,0.75); font-size:11px; letter-spacing:0.1em; text-transform:uppercase; font-weight:600; border-radius:100px; }
+
+  /* FILTERS */
+  .filters-bar { background:var(--white); border-bottom:1px solid var(--border); padding:0 40px; position:sticky; top:74px; z-index:90; }
+  .filter-row { display:flex; align-items:center; gap:6px; overflow-x:auto; scrollbar-width:none; padding:12px 0; border-bottom:1px solid var(--off); }
+  .filter-row:last-child { border-bottom:none; }
+  .filter-row::-webkit-scrollbar { display:none; }
+  .filter-label { font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:var(--muted); font-weight:600; margin-right:10px; white-space:nowrap; min-width:70px; }
+  .filter-pill { padding:5px 16px; border:1px solid var(--border); background:transparent; font-family:'Nunito Sans',sans-serif; font-size:12px; color:var(--muted); cursor:pointer; transition:all 0.2s; letter-spacing:0.04em; font-weight:600; white-space:nowrap; border-radius:100px; }
+  .filter-pill:hover { border-color:var(--saffron); color:var(--saffron); }
+  .filter-pill.active { background:var(--maroon); border-color:var(--maroon); color:var(--white); }
+
+  /* CATALOG */
+  .catalog-wrap { max-width:1280px; margin:0 auto; padding:40px 40px 80px; }
+  .catalog-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:28px; }
+  .catalog-title { font-family:'Playfair Display',serif; font-size:22px; font-weight:600; color:var(--ink); }
+  .catalog-meta { display:flex; align-items:center; gap:12px; }
+  .catalog-count { font-size:13px; color:var(--muted); }
+  .last-updated { font-size:11px; color:var(--muted); background:var(--off); padding:4px 12px; border-radius:100px; }
+  .catalog { display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:20px; }
+
+  /* SKELETON */
+  .skeleton-card { background:var(--white); border:1px solid var(--border); border-radius:6px; overflow:hidden; }
+  .skeleton-img { width:100%; aspect-ratio:3/4; background:linear-gradient(90deg,var(--off) 25%,var(--border) 50%,var(--off) 75%); background-size:200% 100%; animation:shimmer 1.4s infinite; }
+  .skeleton-body { padding:16px 18px 20px; }
+  .skeleton-line { height:10px; background:linear-gradient(90deg,var(--off) 25%,var(--border) 50%,var(--off) 75%); background-size:200% 100%; animation:shimmer 1.4s infinite; border-radius:4px; margin-bottom:10px; }
+  .skeleton-line.short { width:50%; } .skeleton-line.medium { width:75%; }
+  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+  /* PRODUCT CARDS */
+  .product-card { background:var(--white); border:1px solid var(--border); border-radius:6px; cursor:pointer; transition:box-shadow 0.25s,transform 0.25s; overflow:hidden; position:relative; }
+  .product-card:hover { box-shadow:0 12px 40px rgba(139,26,43,0.12); transform:translateY(-4px); }
+  .product-card:hover .card-overlay { opacity:1; }
+  .card-img-wrap { position:relative; }
+  .card-image { width:100%; aspect-ratio:3/4; object-fit:cover; display:block; background:var(--off); }
+  .card-image-placeholder { width:100%; aspect-ratio:3/4; background:linear-gradient(160deg,var(--saffron-lt) 0%,var(--gold-lt) 60%,var(--off) 100%); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; }
+  .placeholder-emoji { font-size:52px; }
+  .placeholder-label { font-family:'Playfair Display',serif; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold); font-weight:600; }
+  .card-overlay { position:absolute; inset:0; background:linear-gradient(to top,rgba(28,8,8,0.7) 0%,transparent 50%); opacity:0; transition:opacity 0.3s; display:flex; align-items:flex-end; padding:16px; }
+  .quick-add-btn { width:100%; background:var(--saffron); color:var(--white); border:none; padding:12px; font-family:'Nunito Sans',sans-serif; font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; border-radius:3px; transition:background 0.2s; }
+  .quick-add-btn:hover { background:#CF621E; }
+  .quick-add-btn.in-cart { background:var(--maroon); }
+  .badge-row { position:absolute; top:12px; left:12px; display:flex; gap:6px; }
+  .badge { padding:4px 10px; font-size:9.5px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; border-radius:3px; }
+  .badge-bestseller { background:var(--maroon); color:white; }
+  .badge-gem { background:var(--gold); color:white; }
+  .card-info { padding:16px 18px 20px; }
+  .card-style-id { font-size:9.5px; letter-spacing:0.18em; color:var(--gold); text-transform:uppercase; margin-bottom:6px; font-weight:600; }
+  .card-title { font-family:'Playfair Display',serif; font-size:16px; font-weight:600; color:var(--ink); margin-bottom:12px; line-height:1.35; }
+  .size-chips { display:flex; gap:5px; flex-wrap:wrap; }
+  .size-chip { padding:3px 9px; border:1px solid var(--border); font-size:10px; color:var(--muted); letter-spacing:0.06em; border-radius:3px; font-weight:600; }
+
+  /* SIZE MODAL */
+  .modal-backdrop { display:none; position:fixed; inset:0; background:rgba(28,8,8,0.55); z-index:200; align-items:center; justify-content:center; }
+  .modal-backdrop.open { display:flex; }
+  .modal { background:var(--ivory); max-width:520px; width:92%; max-height:92vh; overflow-y:auto; border-radius:8px; position:relative; animation:slideUp 0.28s ease; box-shadow:0 24px 80px rgba(28,8,8,0.25); }
+  @keyframes slideUp { from{transform:translateY(24px);opacity:0} to{transform:translateY(0);opacity:1} }
+  .modal-close { position:absolute; top:16px; right:16px; background:rgba(255,255,255,0.92); border:none; width:34px; height:34px; border-radius:50%; font-size:16px; cursor:pointer; color:var(--muted); display:flex; align-items:center; justify-content:center; z-index:10; transition:background 0.2s; }
+  .modal-close:hover { background:white; color:var(--ink); }
+
+  /* IMAGE CAROUSEL */
+  .carousel { position:relative; width:100%; aspect-ratio:4/3; overflow:hidden; border-radius:8px 8px 0 0; background:var(--off); }
+  .carousel-track { display:flex; height:100%; transition:transform 0.4s ease; }
+  .carousel-slide { min-width:100%; height:100%; flex-shrink:0; }
+  .carousel-slide img { width:100%; height:100%; object-fit:cover; display:block; }
+  .carousel-slide .placeholder-modal { width:100%; height:100%; background:linear-gradient(160deg,var(--saffron-lt),var(--gold-lt)); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; }
+  .carousel-btn { position:absolute; top:50%; transform:translateY(-50%); background:rgba(255,255,255,0.9); border:none; width:36px; height:36px; border-radius:50%; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; z-index:5; transition:background 0.2s; }
+  .carousel-btn:hover { background:white; }
+  .carousel-btn.prev { left:12px; }
+  .carousel-btn.next { right:12px; }
+  .carousel-dots { position:absolute; bottom:12px; left:50%; transform:translateX(-50%); display:flex; gap:6px; }
+  .carousel-dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.5); cursor:pointer; transition:background 0.2s; border:none; }
+  .carousel-dot.active { background:white; }
+
+  .modal-body { padding:24px 32px 32px; }
+  .modal-style-id { font-size:10px; color:var(--gold); letter-spacing:0.18em; text-transform:uppercase; font-weight:600; margin-bottom:4px; }
+  .modal h2 { font-family:'Playfair Display',serif; font-size:24px; font-weight:600; color:var(--ink); margin-bottom:4px; line-height:1.25; }
+  .modal-meta { font-size:12px; color:var(--muted); margin-bottom:20px; }
+  .modal-section-label { font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); font-weight:600; margin-bottom:10px; }
+  .modal-sizes { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:22px; }
+  .modal-size-btn { padding:10px 20px; border:1.5px solid var(--border); background:transparent; font-family:'Nunito Sans',sans-serif; font-size:13px; cursor:pointer; transition:all 0.2s; color:var(--ink); border-radius:4px; font-weight:600; }
+  .modal-size-btn:hover { border-color:var(--saffron); color:var(--saffron); }
+  .modal-size-btn.selected { background:var(--maroon); border-color:var(--maroon); color:white; }
+  .add-to-cart-btn { width:100%; background:var(--saffron); color:white; border:none; padding:16px; font-family:'Nunito Sans',sans-serif; font-size:13px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; border-radius:4px; transition:background 0.2s; }
+  .add-to-cart-btn:hover { background:#CF621E; }
+  .add-to-cart-btn:disabled { background:var(--border); color:var(--muted); cursor:not-allowed; }
+
+  /* CART */
+  .cart-sidebar-backdrop { display:none; position:fixed; inset:0; background:rgba(28,8,8,0.4); z-index:299; }
+  .cart-sidebar-backdrop.open { display:block; }
+  .cart-sidebar { position:fixed; top:0; right:-480px; width:460px; height:100vh; background:var(--ivory); z-index:300; box-shadow:-8px 0 50px rgba(28,8,8,0.15); display:flex; flex-direction:column; transition:right 0.35s cubic-bezier(0.4,0,0.2,1); }
+  .cart-sidebar.open { right:0; }
+  .cart-header { padding:28px 32px 24px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-shrink:0; }
+  .cart-header h3 { font-family:'Playfair Display',serif; font-size:22px; font-weight:600; color:var(--ink); }
+  .cart-close { background:none; border:none; font-size:20px; cursor:pointer; color:var(--muted); }
+  .cart-items { flex:1; overflow-y:auto; padding:20px 32px; }
+  .cart-item { display:flex; gap:16px; padding:18px 0; border-bottom:1px solid var(--off); align-items:flex-start; }
+  .cart-item-img { width:72px; height:90px; object-fit:cover; border-radius:4px; flex-shrink:0; background:var(--off); }
+  .cart-item-img-placeholder { width:72px; height:90px; border-radius:4px; background:linear-gradient(135deg,var(--saffron-lt),var(--gold-lt)); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:26px; }
+  .cart-item-info { flex:1; }
+  .cart-item-brand { font-size:9px; color:var(--gold); letter-spacing:0.16em; text-transform:uppercase; font-weight:700; margin-bottom:3px; }
+  .cart-item-title { font-family:'Playfair Display',serif; font-size:15px; color:var(--ink); margin-bottom:5px; font-weight:600; }
+  .cart-item-meta { font-size:12px; color:var(--muted); margin-bottom:10px; }
+  .cart-item-remove { font-size:11px; color:var(--muted); background:none; border:none; cursor:pointer; text-decoration:underline; padding:0; }
+  .cart-item-remove:hover { color:var(--maroon); }
+  .cart-empty { text-align:center; padding:60px 20px; color:var(--muted); font-family:'Playfair Display',serif; font-size:18px; font-style:italic; }
+  .cart-footer { padding:24px 32px; border-top:1px solid var(--border); flex-shrink:0; }
+  .cart-summary { font-size:13px; color:var(--muted); margin-bottom:14px; }
+  .checkout-btn { width:100%; background:var(--maroon); color:white; border:none; padding:18px; font-family:'Nunito Sans',sans-serif; font-size:13px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; border-radius:4px; transition:background 0.2s; }
+  .checkout-btn:hover { background:#6E1422; }
+  .checkout-btn:disabled { background:var(--border); color:var(--muted); cursor:not-allowed; }
+
+  /* ORDER FORM */
+  .order-modal-backdrop { display:none; position:fixed; inset:0; background:rgba(28,8,8,0.6); z-index:400; align-items:center; justify-content:center; }
+  .order-modal-backdrop.open { display:flex; }
+  .order-modal { background:var(--ivory); max-width:540px; width:94%; max-height:94vh; overflow-y:auto; padding:48px; position:relative; border-radius:8px; animation:slideUp 0.28s ease; box-shadow:0 24px 80px rgba(28,8,8,0.25); }
+  .order-modal-top { display:flex; align-items:center; gap:12px; margin-bottom:6px; }
+  .ishin-tag { background:var(--maroon); color:white; padding:4px 12px; font-size:9.5px; letter-spacing:0.16em; text-transform:uppercase; font-weight:700; border-radius:3px; }
+  .order-modal h2 { font-family:'Playfair Display',serif; font-size:30px; font-weight:700; color:var(--ink); margin-bottom:6px; }
+  .order-subtitle { font-size:13px; color:var(--muted); margin-bottom:28px; line-height:1.5; }
+  .order-summary-box { background:var(--off); padding:20px; margin-bottom:26px; border-radius:6px; border-left:3px solid var(--saffron); }
+  .order-summary-box h4 { font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:var(--gold); font-weight:700; margin-bottom:12px; }
+  .order-summary-item { font-size:13px; color:var(--muted); margin-bottom:7px; display:flex; gap:10px; }
+  .order-summary-item span:first-child { font-weight:700; color:var(--ink); min-width:75px; }
+  .form-group { margin-bottom:20px; }
+  .form-group label { display:block; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); font-weight:600; margin-bottom:8px; }
+  .form-group input,.form-group textarea { width:100%; padding:13px 16px; border:1.5px solid var(--border); background:var(--white); font-family:'Nunito Sans',sans-serif; font-size:14px; color:var(--ink); outline:none; transition:border-color 0.2s; resize:none; border-radius:4px; }
+  .form-group input:focus,.form-group textarea:focus { border-color:var(--saffron); }
+  .submit-btn { width:100%; background:var(--saffron); color:white; border:none; padding:18px; font-family:'Nunito Sans',sans-serif; font-size:13px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; border-radius:4px; transition:background 0.2s; margin-top:4px; }
+  .submit-btn:hover { background:#CF621E; }
+  .submit-btn:disabled { background:var(--border); color:var(--muted); cursor:not-allowed; }
+
+  /* SUCCESS */
+  .success-backdrop { display:none; position:fixed; inset:0; background:rgba(28,8,8,0.65); z-index:500; align-items:center; justify-content:center; }
+  .success-backdrop.open { display:flex; }
+  .success-modal { background:var(--ivory); max-width:440px; width:90%; padding:56px 48px; text-align:center; border-radius:8px; animation:slideUp 0.28s ease; box-shadow:0 24px 80px rgba(28,8,8,0.25); }
+  .success-icon { font-size:52px; margin-bottom:20px; }
+  .success-modal h2 { font-family:'Playfair Display',serif; font-size:32px; font-weight:700; color:var(--maroon); margin-bottom:12px; }
+  .success-modal p { font-size:14px; color:var(--muted); line-height:1.7; margin-bottom:32px; }
+  .success-close-btn { background:var(--maroon); color:white; border:none; padding:14px 40px; font-family:'Nunito Sans',sans-serif; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; font-weight:700; border-radius:4px; }
+
+  .toast { position:fixed; bottom:32px; left:50%; transform:translateX(-50%) translateY(80px); background:var(--maroon); color:white; padding:13px 28px; font-size:13px; letter-spacing:0.04em; z-index:600; transition:transform 0.3s ease; white-space:nowrap; border-radius:4px; font-weight:600; box-shadow:0 8px 24px rgba(139,26,43,0.35); }
+  .toast.show { transform:translateX(-50%) translateY(0); }
+  .empty-state { grid-column:1/-1; padding:80px 20px; text-align:center; color:var(--muted); font-family:'Playfair Display',serif; font-size:20px; font-style:italic; }
+
+  @media(max-width:640px) {
+    .header-inner { padding:0 20px; }
+    .hero { padding:48px 20px 44px; }
+    .hero h1 { font-size:36px; }
+    .filters-bar { padding:0 20px; }
+    .catalog-wrap { padding:28px 16px 60px; }
+    .catalog { grid-template-columns:repeat(2,1fr); gap:12px; }
+    .cart-sidebar { width:100%; right:-100%; }
+    .order-modal { padding:32px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-loader" id="pageLoader">
+  <div class="loader-logo">Ishin</div>
+  <div class="loader-sub">by BRND.ME</div>
+  <div class="loader-bar"><div class="loader-bar-fill"></div></div>
+  <div class="loader-text" id="loaderText">Loading collection...</div>
+</div>
+
+<div class="error-banner" id="errorBanner">
+  ⚠️ <span id="errorMsg">Could not load catalog. Check configuration.</span>
+</div>
+
+<div class="top-bar">Exclusive Influencer Gifting Program &nbsp;◆&nbsp; Ishin × BRND.ME</div>
+
+<header>
+  <div class="header-inner">
+    <div class="header-left">
+      <div class="logo-block">
+        <div class="logo-main">Ishin</div>
+        <div class="logo-sub">Women's Ethnic Wear</div>
+      </div>
+      <div class="header-divider"></div>
+      <div class="brndme-badge">by BRND.ME</div>
+    </div>
+    <button class="cart-btn" onclick="openCart()">
+      <span>My Picks</span>
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-deco"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Influencer Gifting — Ishin × BRND.ME</div>
+    <h1>Wear the <em>culture,</em><br>tell the story.</h1>
+    <p>We've curated our finest ethnic collection exclusively for you. Choose styles that speak to your aesthetic — they're yours, compliments of Ishin.</p>
+    <div class="hero-pills">
+      <span class="hero-pill">Kurta Sets</span>
+      <span class="hero-pill">Co-ords</span>
+      <span class="hero-pill">Dresses</span>
+      <span class="hero-pill">Festive Wear</span>
+      <span class="hero-pill">Fusion</span>
+    </div>
+  </div>
+</div>
+
+<!-- DUAL FILTER BAR: Gender + Category -->
+<div class="filters-bar">
+  <div class="filter-row">
+    <span class="filter-label">Gender</span>
+    <button class="filter-pill active" onclick="setFilter('gender','all',this)">All</button>
+    <button class="filter-pill" onclick="setFilter('gender','Women',this)">Women</button>
+    <button class="filter-pill" onclick="setFilter('gender','Men',this)">Men</button>
+  </div>
+  <div class="filter-row">
+    <span class="filter-label">Category</span>
+    <button class="filter-pill active" onclick="setFilter('category','all',this)">All Styles</button>
+    <button class="filter-pill" onclick="setFilter('category','Kurta Sets',this)">Kurta Sets</button>
+    <button class="filter-pill" onclick="setFilter('category','Co-ords',this)">Co-ords</button>
+    <button class="filter-pill" onclick="setFilter('category','Dresses',this)">Dresses</button>
+    <button class="filter-pill" onclick="setFilter('category','Festive',this)">Festive</button>
+    <button class="filter-pill" onclick="setFilter('category','Fusion',this)">Fusion</button>
+  </div>
+</div>
+
+<div class="catalog-wrap">
+  <div class="catalog-header">
+    <div class="catalog-title">Available Styles</div>
+    <div class="catalog-meta">
+      <div class="catalog-count" id="catalogCount"></div>
+      <div class="last-updated" id="lastUpdated"></div>
+    </div>
+  </div>
+  <div class="catalog" id="catalog"></div>
+</div>
+
+<!-- SIZE MODAL -->
+<div class="modal-backdrop" id="sizeModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<!-- CART -->
+<div class="cart-sidebar-backdrop" id="cartBackdrop" onclick="closeCart()"></div>
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-header">
+    <h3>My Picks</h3>
+    <button class="cart-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-footer">
+    <div class="cart-summary" id="cartSummary"></div>
+    <button class="checkout-btn" id="checkoutBtn" onclick="openOrderForm()" disabled>Place Free Order →</button>
+  </div>
+</div>
+
+<!-- ORDER FORM -->
+<div class="order-modal-backdrop" id="orderModal">
+  <div class="order-modal">
+    <button class="modal-close" onclick="closeOrderForm()" style="position:absolute;top:16px;right:16px;">✕</button>
+    <div class="order-modal-top"><span class="ishin-tag">Ishin × BRND.ME</span></div>
+    <h2>Almost there!</h2>
+    <p class="order-subtitle">Drop your details below and we'll send your picks right to your door. Completely complimentary.</p>
+    <div id="orderSummaryBox"></div>
+    <div class="form-group"><label>Full Name</label><input type="text" id="fieldName" placeholder="Your full name"/></div>
+    <div class="form-group"><label>Contact Number</label><input type="tel" id="fieldPhone" placeholder="+91 98765 43210"/></div>
+    <div class="form-group"><label>Delivery Address</label><textarea id="fieldAddress" rows="4" placeholder="Flat / House No., Street, Area, City, State — Pincode"></textarea></div>
+    <button class="submit-btn" id="submitBtn" onclick="submitOrder()">Confirm & Place Order →</button>
+  </div>
+</div>
+
+<!-- SUCCESS -->
+<div class="success-backdrop" id="successModal">
+  <div class="success-modal">
+    <div class="success-icon">🎊</div>
+    <h2>Order Placed!</h2>
+    <p>Your Ishin picks are confirmed. Our team will reach out with shipping details shortly. Thank you for being a part of the Ishin story!</p>
+    <button class="success-close-btn" onclick="resetAll()">Back to Catalog</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ╔══════════════════════════════════════════════════════════════╗
+// ║                    CONFIGURATION                            ║
+// ╠══════════════════════════════════════════════════════════════╣
+const SHEET_ID        = '1I5h28_DuDituBAQbdHX_rz4RFNPzA8pflzYrmrOTLnE';
+const API_KEY         = 'AIzaSyDAkVIC8G7v8wrZdfvZBMzd5dpHCTMPfg4';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzcbIUkcFTYvQhStF43kB-AYO_tnPI4779Z5uWtpTE05DXi4WAfR6JMW5po22McYyaW/exec';
+// ╚══════════════════════════════════════════════════════════════╝
+
+// Master_Catalog column mapping (0-indexed, A=0)
+// A=STYLE_ID(0) B=SKU_ID(1) C=BRAND(2) D=PARENT_ZSKU(3) E=CHILD_ZSKU(4)
+// F=SIZE(5) G=GENDER(6) H=CATEGORY(7) I=PRODUCT_TITLE(8)
+// J=IMAGE_LINK_1(9) K=IMAGE_LINK_2(10) L=IMAGE_LINK_3(11)
+// M=BANGALORE_INVENTORY(12) N=GURGAON_INVENTORY(13) O=TOTAL_INVENTORY(14)
+// P=EFF_BLR(15) Q=EFF_GGN(16) R=EFF_TOTAL(17)
+// S=STYLE_COGS(18) T=SKU_LIFETIME_SALES(19)
+// U=AUTO_ELIGIBLE(20) V=MANUAL_OVERRIDE(21) W=FINAL_SHOW(22)
+const COL = {
+  STYLE_ID:0, SKU_ID:1, BRAND:2, PARENT_ZSKU:3, CHILD_ZSKU:4,
+  SIZE:5, GENDER:6, CATEGORY:7, TITLE:8,
+  IMG1:9, IMG2:10, IMG3:11,
+  INV_BLR:12, INV_GGN:13, INV_TOTAL:14,
+  EFF_BLR:15, EFF_GGN:16, EFF_TOTAL:17,
+  COGS:18, SALES:19,
+  AUTO_ELIGIBLE:20, MANUAL_OVERRIDE:21, FINAL_SHOW:22
+};
+
+const SHEET_RANGE  = 'Master_Catalog!A2:W';
+const emojis = ['👗','🪷','🌸','🎋','🌺','🪻','✨','🌼','🦚','🌿'];
+
+// ── State ──
+let allStyles   = [];   // grouped by styleId, only FINAL_SHOW=YES
+let cart        = [];
+let currentStyle = null;
+let activeFilters = { gender:'all', category:'all' };
+
+// ════════════════════════════════════════════════════════════════
+// FETCH FROM GOOGLE SHEETS
+// ════════════════════════════════════════════════════════════════
+async function fetchCatalog() {
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(SHEET_RANGE)}?key=${API_KEY}`;
+  try {
+    document.getElementById('loaderText').textContent = 'Fetching latest collection...';
+    const res = await fetch(url);
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err?.error?.message || `HTTP ${res.status}`);
+    }
+    const data = await res.json();
+    const rows = data.values || [];
+    if (!rows.length) throw new Error('No data found in Master_Catalog sheet.');
+
+    // ── Parse + group by Style ID ──
+    // Only include rows where FINAL_SHOW = "YES"
+    const styleMap = {};
+
+    rows.forEach(row => {
+      const finalShow = (row[COL.FINAL_SHOW] || '').trim().toUpperCase();
+      if (finalShow !== 'YES') return;
+
+      const styleId = (row[COL.STYLE_ID] || '').trim();
+      const skuId   = (row[COL.SKU_ID]   || '').trim();
+      const size    = (row[COL.SIZE]      || '').trim();
+      if (!styleId || !skuId || !size) return;
+
+      if (!styleMap[styleId]) {
+        styleMap[styleId] = {
+          styleId,
+          brand:    (row[COL.BRAND]    || '').trim(),
+          gender:   (row[COL.GENDER]   || '').trim(),
+          category: (row[COL.CATEGORY] || '').trim(),
+          title:    (row[COL.TITLE]    || '').trim(),
+          images:   [
+            (row[COL.IMG1] || '').trim(),
+            (row[COL.IMG2] || '').trim(),
+            (row[COL.IMG3] || '').trim()
+          ].filter(Boolean),
+          sales:    parseInt(row[COL.SALES] || '0', 10),
+          sizes:    [],
+          skus:     []
+        };
+      }
+
+      // Add size only if not already added for this style
+      if (!styleMap[styleId].sizes.includes(size)) {
+        styleMap[styleId].sizes.push(size);
+      }
+      styleMap[styleId].skus.push({ skuId, size });
+    });
+
+    allStyles = Object.values(styleMap);
+
+    if (!allStyles.length) {
+      throw new Error('No styles with FINAL_SHOW_ON_LANDING_PAGE = YES found in Master_Catalog.');
+    }
+
+    const now = new Date();
+    document.getElementById('lastUpdated').textContent =
+      `Updated ${now.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' })}`;
+
+    hideLoader();
+    renderCatalog();
+
+  } catch (err) {
+    console.error('Fetch error:', err);
+    showError(`${err.message}`);
+    hideLoader();
+    showSkeletons(false);
+  }
+}
+
+// ════════════════════════════════════════════════════════════════
+// RENDER CATALOG
+// ════════════════════════════════════════════════════════════════
+function getFilteredStyles() {
+  return allStyles.filter(p => {
+    const genderMatch   = activeFilters.gender   === 'all' || p.gender   === activeFilters.gender;
+    const categoryMatch = activeFilters.category === 'all' || p.category === activeFilters.category;
+    return genderMatch && categoryMatch;
+  });
+}
+
+function renderCatalog() {
+  const el   = document.getElementById('catalog');
+  const list = getFilteredStyles();
+  document.getElementById('catalogCount').textContent =
+    `${list.length} style${list.length !== 1 ? 's' : ''} available`;
+
+  if (!list.length) {
+    el.innerHTML = `<div class="empty-state">No styles match this filter — try another combination.</div>`;
+    return;
+  }
+
+  el.innerHTML = list.map((p, i) => {
+    const inCart = cart.find(c => c.styleId === p.styleId);
+    const emoji  = emojis[i % emojis.length];
+    const badge  = p.sales > 300
+      ? `<span class="badge badge-bestseller">Bestseller</span>`
+      : p.sales < 100 && p.sales > 0
+      ? `<span class="badge badge-gem">Hidden Gem</span>` : '';
+
+    const imgEl = p.images[0]
+      ? `<img class="card-image" src="${p.images[0]}" alt="${p.title}"
+           onerror="this.outerHTML='<div class=card-image-placeholder><div class=placeholder-emoji>${emoji}</div><div class=placeholder-label>Ishin</div></div>'">`
+      : `<div class="card-image-placeholder">
+           <div class="placeholder-emoji">${emoji}</div>
+           <div class="placeholder-label">Ishin</div>
+         </div>`;
+
+    return `
+      <div class="product-card" onclick="openSizeModal('${p.styleId}')">
+        <div class="card-img-wrap">
+          ${imgEl}
+          <div class="badge-row">${badge}</div>
+          <div class="card-overlay">
+            <button class="quick-add-btn ${inCart ? 'in-cart' : ''}"
+              onclick="event.stopPropagation();openSizeModal('${p.styleId}')">
+              ${inCart ? '✓ In My Picks' : 'Select Size'}
+            </button>
+          </div>
+        </div>
+        <div class="card-info">
+          <div class="card-style-id">${p.styleId} · ${p.gender}</div>
+          <div class="card-title">${p.title}</div>
+          <div class="size-chips">
+            ${p.sizes.map(s => `<span class="size-chip">${s}</span>`).join('')}
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function setFilter(type, value, btn) {
+  activeFilters[type] = value;
+  // Update pill active state within that row only
+  btn.closest('.filter-row').querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  renderCatalog();
+}
+
+// ════════════════════════════════════════════════════════════════
+// SIZE MODAL WITH IMAGE CAROUSEL
+// ════════════════════════════════════════════════════════════════
+let carouselIdx = 0;
+
+function openSizeModal(styleId) {
+  const p = allStyles.find(x => x.styleId === styleId);
+  if (!p) return;
+  currentStyle = p;
+  carouselIdx  = 0;
+  const inCart = cart.find(c => c.styleId === p.styleId);
+  const i      = allStyles.indexOf(p);
+  const emoji  = emojis[i % emojis.length];
+
+  // Build carousel slides
+  const slides = p.images.length > 0
+    ? p.images.map(img => `
+        <div class="carousel-slide">
+          <img src="${img}" alt="${p.title}"
+               onerror="this.parentElement.innerHTML='<div class=placeholder-modal style=width:100%;height:100%;background:linear-gradient(160deg,#FBE8D8,#FDF3DC);display:flex;align-items:center;justify-content:center;font-size:72px>${emoji}</div>'">
+        </div>`)
+    : [`<div class="carousel-slide">
+          <div class="placeholder-modal" style="width:100%;height:100%;background:linear-gradient(160deg,#FBE8D8,#FDF3DC);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;">
+            <div style="font-size:72px">${emoji}</div>
+            <div style="font-family:'Playfair Display',serif;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#C9952A;font-weight:600">Ishin</div>
+          </div>
+        </div>`];
+
+  const dotsHtml = slides.length > 1
+    ? `<div class="carousel-dots">${slides.map((_,i) =>
+        `<button class="carousel-dot ${i===0?'active':''}" onclick="goToSlide(${i})"></button>`
+      ).join('')}</div>` : '';
+
+  const navHtml = slides.length > 1
+    ? `<button class="carousel-btn prev" onclick="shiftCarousel(-1)">‹</button>
+       <button class="carousel-btn next" onclick="shiftCarousel(1)">›</button>` : '';
+
+  document.getElementById('modalContent').innerHTML = `
+    <div class="carousel" id="carousel">
+      <div class="carousel-track" id="carouselTrack">
+        ${slides.join('')}
+      </div>
+      ${navHtml}
+      ${dotsHtml}
+    </div>
+    <div class="modal-body">
+      <div class="modal-style-id">${p.styleId} · ${p.brand}</div>
+      <h2>${p.title}</h2>
+      <div class="modal-meta">${p.gender} · ${p.category}</div>
+      <div class="modal-section-label">Choose Your Size</div>
+      <div class="modal-sizes">
+        ${p.sizes.map(s => `
+          <button class="modal-size-btn ${inCart && inCart.size === s ? 'selected' : ''}"
+            onclick="selectSize('${s}',this)">${s}</button>`).join('')}
+      </div>
+      <button class="add-to-cart-btn" id="addToCartBtn" onclick="addToCart()" ${inCart ? '' : 'disabled'}>
+        ${inCart ? `Update Pick — Size ${inCart.size}` : 'Select a size to continue'}
+      </button>
+    </div>`;
+
+  if (inCart) currentStyle._selectedSize = inCart.size;
+  document.getElementById('sizeModal').classList.add('open');
+}
+
+function shiftCarousel(dir) {
+  const p = currentStyle;
+  if (!p) return;
+  carouselIdx = (carouselIdx + dir + p.images.length) % p.images.length;
+  updateCarousel();
+}
+
+function goToSlide(idx) {
+  carouselIdx = idx;
+  updateCarousel();
+}
+
+function updateCarousel() {
+  const track = document.getElementById('carouselTrack');
+  if (track) track.style.transform = `translateX(-${carouselIdx * 100}%)`;
+  document.querySelectorAll('.carousel-dot').forEach((d, i) => {
+    d.classList.toggle('active', i === carouselIdx);
+  });
+}
+
+function selectSize(size, btn) {
+  document.querySelectorAll('.modal-size-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  currentStyle._selectedSize = size;
+  const addBtn = document.getElementById('addToCartBtn');
+  addBtn.disabled = false;
+  addBtn.textContent = 'Add to My Picks →';
+}
+
+function addToCart() {
+  if (!currentStyle || !currentStyle._selectedSize) return;
+  const existing = cart.findIndex(c => c.styleId === currentStyle.styleId);
+  const item = {
+    styleId: currentStyle.styleId,
+    skuId:   currentStyle.skus.find(s => s.size === currentStyle._selectedSize)?.skuId || '',
+    title:   currentStyle.title,
+    size:    currentStyle._selectedSize,
+    image:   currentStyle.images[0] || null,
+    emoji:   emojis[allStyles.indexOf(currentStyle) % emojis.length]
+  };
+  if (existing >= 0) { cart[existing] = item; showToast('Pick updated!'); }
+  else               { cart.push(item);        showToast('Added to picks!'); }
+  closeModal(); updateCart(); renderCatalog();
+}
+
+function closeModal() {
+  document.getElementById('sizeModal').classList.remove('open');
+  currentStyle = null; carouselIdx = 0;
+}
+
+// ════════════════════════════════════════════════════════════════
+// CART
+// ════════════════════════════════════════════════════════════════
+function updateCart() {
+  const count = cart.length;
+  document.getElementById('cartCount').textContent = count;
+  document.getElementById('checkoutBtn').disabled  = count === 0;
+  if (!count) {
+    document.getElementById('cartItems').innerHTML     = `<div class="cart-empty">Your picks will appear here</div>`;
+    document.getElementById('cartSummary').textContent = '';
+    return;
+  }
+  document.getElementById('cartItems').innerHTML = cart.map((item, i) => {
+    const imgEl = item.image
+      ? `<img class="cart-item-img" src="${item.image}" alt="${item.title}">`
+      : `<div class="cart-item-img-placeholder">${item.emoji}</div>`;
+    return `
+      <div class="cart-item">
+        ${imgEl}
+        <div class="cart-item-info">
+          <div class="cart-item-brand">Ishin</div>
+          <div class="cart-item-title">${item.title}</div>
+          <div class="cart-item-meta">${item.styleId} · Size ${item.size}</div>
+          <button class="cart-item-remove" onclick="removeFromCart(${i})">Remove</button>
+        </div>
+      </div>`;
+  }).join('');
+  document.getElementById('cartSummary').textContent =
+    `${count} style${count > 1 ? 's' : ''} selected · Complimentary gift`;
+}
+
+function removeFromCart(i)  { cart.splice(i,1); updateCart(); renderCatalog(); }
+function openCart()  { updateCart(); document.getElementById('cartSidebar').classList.add('open'); document.getElementById('cartBackdrop').classList.add('open'); }
+function closeCart() { document.getElementById('cartSidebar').classList.remove('open'); document.getElementById('cartBackdrop').classList.remove('open'); }
+
+// ════════════════════════════════════════════════════════════════
+// ORDER FORM
+// ════════════════════════════════════════════════════════════════
+function openOrderForm() {
+  closeCart();
+  document.getElementById('orderSummaryBox').innerHTML = `
+    <div class="order-summary-box">
+      <h4>Your Picks (${cart.length})</h4>
+      ${cart.map(item => `
+        <div class="order-summary-item">
+          <span>${item.styleId}</span>
+          <span>${item.title} · Size ${item.size}</span>
+        </div>`).join('')}
+    </div>`;
+  document.getElementById('orderModal').classList.add('open');
+}
+
+function closeOrderForm() { document.getElementById('orderModal').classList.remove('open'); }
+
+async function submitOrder() {
+  const name    = document.getElementById('fieldName').value.trim();
+  const phone   = document.getElementById('fieldPhone').value.trim();
+  const address = document.getElementById('fieldAddress').value.trim();
+  if (!name || !phone || !address) { showToast('Please fill in all fields'); return; }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true; btn.textContent = 'Placing order...';
+
+  const payload = {
+    name, phone, address,
+    timestamp: new Date().toLocaleString('en-IN', { timeZone:'Asia/Kolkata' }),
+    items: cart.map(c => ({ styleId:c.styleId, skuId:c.skuId, title:c.title, size:c.size }))
+  };
+
+  try {
+    await fetch(APPS_SCRIPT_URL, {
+      method:'POST', mode:'no-cors',
+      headers:{ 'Content-Type':'application/json' },
+      body: JSON.stringify(payload)
+    });
+  } catch(e) { console.error('Order submit error:', e); }
+
+  btn.disabled = false; btn.textContent = 'Confirm & Place Order →';
+  closeOrderForm();
+  document.getElementById('successModal').classList.add('open');
+}
+
+function resetAll() {
+  cart = [];
+  document.getElementById('successModal').classList.remove('open');
+  ['fieldName','fieldPhone','fieldAddress'].forEach(id => document.getElementById(id).value = '');
+  updateCart(); renderCatalog();
+}
+
+// ════════════════════════════════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════════════════════════════════
+function showSkeletons(show) {
+  const el = document.getElementById('catalog');
+  if (show) {
+    el.innerHTML = Array(8).fill(0).map(() => `
+      <div class="skeleton-card">
+        <div class="skeleton-img"></div>
+        <div class="skeleton-body">
+          <div class="skeleton-line short"></div>
+          <div class="skeleton-line medium"></div>
+          <div class="skeleton-line short"></div>
+        </div>
+      </div>`).join('');
+  } else { el.innerHTML = ''; }
+}
+
+function hideLoader() {
+  setTimeout(() => {
+    document.getElementById('pageLoader').classList.add('hide');
+    setTimeout(() => document.getElementById('pageLoader').style.display='none', 500);
+  }, 600);
+}
+
+function showError(msg) {
+  document.getElementById('errorMsg').textContent = msg;
+  document.getElementById('errorBanner').classList.add('show');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+document.getElementById('sizeModal').addEventListener('click', e => { if(e.target===e.currentTarget) closeModal(); });
+document.getElementById('orderModal').addEventListener('click', e => { if(e.target===e.currentTarget) closeOrderForm(); });
+
+// INIT
+showSkeletons(true);
+updateCart();
+fetchCatalog();
+</script>
+</body>
+</html>
