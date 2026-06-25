@@ -401,10 +401,6 @@ async function fetchCatalog() {
     allStyles = Object.values(styleMap);
     if (!allStyles.length) throw new Error('No styles with FINAL_SHOW = YES found in Master_Catalog.');
 
-    // Feed garment images into the floating animation
-    const imageUrls = allStyles.flatMap(s => s.images).filter(Boolean);
-    injectFloatingImages(imageUrls);
-
     const now = new Date();
     document.getElementById('lastUpdated').textContent =
       `Updated ${now.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' })}`;
