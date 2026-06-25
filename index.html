@@ -15,24 +15,81 @@
   }
   body { font-family:'Nunito Sans',sans-serif; background:var(--ivory); color:var(--ink); min-height:100vh; overflow-x:hidden; }
 
-  /* LOADER */
-  .page-loader { position:fixed; inset:0; background:var(--maroon); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:9999; transition:opacity 0.5s ease; }
+  /* ── LOADER ───────────────────────────────────────── */
+  .page-loader {
+    position:fixed; inset:0;
+    background:var(--maroon);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    z-index:9999;
+    transition:opacity 0.6s ease;
+  }
   .page-loader.hide { opacity:0; pointer-events:none; }
-  .loader-logo { font-family:'Playfair Display',serif; font-size:32px; font-weight:700; color:var(--white); margin-bottom:8px; }
-  .loader-sub { font-size:11px; letter-spacing:0.2em; text-transform:uppercase; color:rgba(255,255,255,0.6); margin-bottom:40px; }
-  .loader-bar { width:180px; height:2px; background:rgba(255,255,255,0.15); border-radius:2px; overflow:hidden; }
-  .loader-bar-fill { height:100%; background:var(--gold); border-radius:2px; animation:loadFill 1.8s ease forwards; }
-  @keyframes loadFill { from{width:0} to{width:100%} }
-  .loader-text { font-size:11px; color:rgba(255,255,255,0.45); margin-top:14px; letter-spacing:0.08em; }
 
-  /* ERROR */
+  /* Floating fabric images */
+  .loader-float-container { position:absolute; inset:0; overflow:hidden; }
+  .loader-float-img {
+    position:absolute;
+    width:130px; height:160px;
+    object-fit:cover;
+    border-radius:8px;
+    opacity:0;
+    filter:blur(1.5px) saturate(0.5);
+    animation:fabricFloat linear infinite;
+    will-change:transform;
+  }
+  @keyframes fabricFloat {
+    0%   { transform:translateY(110vh) rotate(var(--rot-start)) scale(0.8); opacity:0; }
+    8%   { opacity:0.1; }
+    92%  { opacity:0.1; }
+    100% { transform:translateY(-20vh) rotate(var(--rot-end)) scale(1.08); opacity:0; }
+  }
+
+  /* Center content */
+  .loader-center {
+    position:relative; z-index:2;
+    display:flex; flex-direction:column; align-items:center;
+    gap:0;
+  }
+  .loader-logo {
+    font-family:'Playfair Display',serif;
+    font-size:36px; font-weight:700;
+    color:var(--white);
+    letter-spacing:0.04em;
+    animation:logoPulse 2.4s ease-in-out infinite;
+  }
+  @keyframes logoPulse {
+    0%,100% { opacity:0.85; transform:scale(1); }
+    50%     { opacity:1;    transform:scale(1.04); }
+  }
+  .loader-sub {
+    font-size:10px; letter-spacing:0.22em;
+    text-transform:uppercase;
+    color:rgba(255,255,255,0.5);
+    margin-top:5px; margin-bottom:32px;
+  }
+  .loader-bar {
+    width:200px; height:2px;
+    background:rgba(255,255,255,0.12);
+    border-radius:2px; overflow:hidden;
+    margin-bottom:14px;
+  }
+  .loader-bar-fill {
+    height:100%;
+    background:linear-gradient(90deg, var(--gold) 0%, #F5C84A 100%);
+    border-radius:2px;
+    width:0%;
+    transition:width 0.4s ease;
+  }
+  .loader-text {
+    font-size:11px; color:rgba(255,255,255,0.38);
+    letter-spacing:0.1em;
+    margin-top:2px;
+  }
+
+  /* ── REST OF STYLES (unchanged) ──────────────────── */
   .error-banner { display:none; background:#FAD7D7; border-bottom:1px solid #e0aaaa; padding:12px 40px; font-size:13px; color:#8B1A2B; gap:10px; align-items:center; }
   .error-banner.show { display:flex; }
-
-  /* TOP BAR */
   .top-bar { background:var(--maroon); color:rgba(255,255,255,0.88); text-align:center; font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase; padding:9px 20px; font-weight:600; }
-
-  /* HEADER */
   header { position:sticky; top:0; z-index:100; background:var(--ivory); border-bottom:1px solid var(--border); }
   .header-inner { max-width:1280px; margin:0 auto; padding:0 40px; height:74px; display:flex; align-items:center; justify-content:space-between; }
   .logo-block { display:flex; flex-direction:column; gap:2px; }
@@ -44,8 +101,6 @@
   .cart-btn { background:var(--saffron); color:var(--white); border:none; padding:11px 24px; font-family:'Nunito Sans',sans-serif; font-size:12px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; display:flex; align-items:center; gap:10px; border-radius:2px; transition:background 0.2s,transform 0.15s; }
   .cart-btn:hover { background:#CF621E; transform:translateY(-1px); }
   .cart-count { background:var(--maroon); color:white; border-radius:50%; width:20px; height:20px; font-size:11px; display:flex; align-items:center; justify-content:center; font-weight:700; }
-
-  /* HERO */
   .hero { background:linear-gradient(135deg,var(--maroon) 0%,#5C1020 100%); position:relative; overflow:hidden; padding:72px 40px 64px; }
   .hero::before { content:''; position:absolute; inset:0; background-image:radial-gradient(circle at 80% 20%,rgba(201,149,42,0.18) 0%,transparent 50%),radial-gradient(circle at 10% 80%,rgba(232,115,42,0.15) 0%,transparent 40%); }
   .hero-deco { position:absolute; right:-80px; top:-80px; width:480px; height:480px; border-radius:50%; border:1px solid rgba(201,149,42,0.2); pointer-events:none; }
@@ -59,8 +114,6 @@
   .hero p { font-size:15px; color:rgba(255,255,255,0.72); line-height:1.7; font-weight:300; max-width:480px; }
   .hero-pills { display:flex; gap:10px; margin-top:28px; flex-wrap:wrap; }
   .hero-pill { padding:6px 16px; border:1px solid rgba(201,149,42,0.4); color:rgba(255,255,255,0.75); font-size:11px; letter-spacing:0.1em; text-transform:uppercase; font-weight:600; border-radius:100px; }
-
-  /* FILTERS */
   .filters-bar { background:var(--white); border-bottom:1px solid var(--border); padding:0 40px; position:sticky; top:74px; z-index:90; }
   .filter-row { display:flex; align-items:center; gap:6px; overflow-x:auto; scrollbar-width:none; padding:12px 0; border-bottom:1px solid var(--off); }
   .filter-row:last-child { border-bottom:none; }
@@ -69,8 +122,6 @@
   .filter-pill { padding:5px 16px; border:1px solid var(--border); background:transparent; font-family:'Nunito Sans',sans-serif; font-size:12px; color:var(--muted); cursor:pointer; transition:all 0.2s; letter-spacing:0.04em; font-weight:600; white-space:nowrap; border-radius:100px; }
   .filter-pill:hover { border-color:var(--saffron); color:var(--saffron); }
   .filter-pill.active { background:var(--maroon); border-color:var(--maroon); color:var(--white); }
-
-  /* CATALOG */
   .catalog-wrap { max-width:1280px; margin:0 auto; padding:40px 40px 80px; }
   .catalog-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:28px; }
   .catalog-title { font-family:'Playfair Display',serif; font-size:22px; font-weight:600; color:var(--ink); }
@@ -78,16 +129,12 @@
   .catalog-count { font-size:13px; color:var(--muted); }
   .last-updated { font-size:11px; color:var(--muted); background:var(--off); padding:4px 12px; border-radius:100px; }
   .catalog { display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:20px; }
-
-  /* SKELETON */
   .skeleton-card { background:var(--white); border:1px solid var(--border); border-radius:6px; overflow:hidden; }
   .skeleton-img { width:100%; aspect-ratio:3/4; background:linear-gradient(90deg,var(--off) 25%,var(--border) 50%,var(--off) 75%); background-size:200% 100%; animation:shimmer 1.4s infinite; }
   .skeleton-body { padding:16px 18px 20px; }
   .skeleton-line { height:10px; background:linear-gradient(90deg,var(--off) 25%,var(--border) 50%,var(--off) 75%); background-size:200% 100%; animation:shimmer 1.4s infinite; border-radius:4px; margin-bottom:10px; }
   .skeleton-line.short { width:50%; } .skeleton-line.medium { width:75%; }
   @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
-
-  /* PRODUCT CARDS */
   .product-card { background:var(--white); border:1px solid var(--border); border-radius:6px; cursor:pointer; transition:box-shadow 0.25s,transform 0.25s; overflow:hidden; position:relative; }
   .product-card:hover { box-shadow:0 12px 40px rgba(139,26,43,0.12); transform:translateY(-4px); }
   .product-card:hover .card-overlay { opacity:1; }
@@ -109,21 +156,16 @@
   .card-title { font-family:'Playfair Display',serif; font-size:16px; font-weight:600; color:var(--ink); margin-bottom:12px; line-height:1.35; }
   .size-chips { display:flex; gap:5px; flex-wrap:wrap; }
   .size-chip { padding:3px 9px; border:1px solid var(--border); font-size:10px; color:var(--muted); letter-spacing:0.06em; border-radius:3px; font-weight:600; }
-
-  /* SIZE MODAL */
   .modal-backdrop { display:none; position:fixed; inset:0; background:rgba(28,8,8,0.55); z-index:200; align-items:center; justify-content:center; }
   .modal-backdrop.open { display:flex; }
   .modal { background:var(--ivory); max-width:520px; width:92%; max-height:92vh; overflow-y:auto; border-radius:8px; position:relative; animation:slideUp 0.28s ease; box-shadow:0 24px 80px rgba(28,8,8,0.25); }
   @keyframes slideUp { from{transform:translateY(24px);opacity:0} to{transform:translateY(0);opacity:1} }
   .modal-close { position:absolute; top:16px; right:16px; background:rgba(255,255,255,0.92); border:none; width:34px; height:34px; border-radius:50%; font-size:16px; cursor:pointer; color:var(--muted); display:flex; align-items:center; justify-content:center; z-index:10; transition:background 0.2s; }
   .modal-close:hover { background:white; color:var(--ink); }
-
-  /* IMAGE CAROUSEL */
   .carousel { position:relative; width:100%; aspect-ratio:4/3; overflow:hidden; border-radius:8px 8px 0 0; background:var(--off); }
   .carousel-track { display:flex; height:100%; transition:transform 0.4s ease; }
   .carousel-slide { min-width:100%; height:100%; flex-shrink:0; }
   .carousel-slide img { width:100%; height:100%; object-fit:cover; display:block; }
-  .carousel-slide .placeholder-modal { width:100%; height:100%; background:linear-gradient(160deg,var(--saffron-lt),var(--gold-lt)); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; }
   .carousel-btn { position:absolute; top:50%; transform:translateY(-50%); background:rgba(255,255,255,0.9); border:none; width:36px; height:36px; border-radius:50%; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; z-index:5; transition:background 0.2s; }
   .carousel-btn:hover { background:white; }
   .carousel-btn.prev { left:12px; }
@@ -131,7 +173,6 @@
   .carousel-dots { position:absolute; bottom:12px; left:50%; transform:translateX(-50%); display:flex; gap:6px; }
   .carousel-dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.5); cursor:pointer; transition:background 0.2s; border:none; }
   .carousel-dot.active { background:white; }
-
   .modal-body { padding:24px 32px 32px; }
   .modal-style-id { font-size:10px; color:var(--gold); letter-spacing:0.18em; text-transform:uppercase; font-weight:600; margin-bottom:4px; }
   .modal h2 { font-family:'Playfair Display',serif; font-size:24px; font-weight:600; color:var(--ink); margin-bottom:4px; line-height:1.25; }
@@ -144,8 +185,6 @@
   .add-to-cart-btn { width:100%; background:var(--saffron); color:white; border:none; padding:16px; font-family:'Nunito Sans',sans-serif; font-size:13px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; border-radius:4px; transition:background 0.2s; }
   .add-to-cart-btn:hover { background:#CF621E; }
   .add-to-cart-btn:disabled { background:var(--border); color:var(--muted); cursor:not-allowed; }
-
-  /* CART */
   .cart-sidebar-backdrop { display:none; position:fixed; inset:0; background:rgba(28,8,8,0.4); z-index:299; }
   .cart-sidebar-backdrop.open { display:block; }
   .cart-sidebar { position:fixed; top:0; right:-480px; width:460px; height:100vh; background:var(--ivory); z-index:300; box-shadow:-8px 0 50px rgba(28,8,8,0.15); display:flex; flex-direction:column; transition:right 0.35s cubic-bezier(0.4,0,0.2,1); }
@@ -169,8 +208,6 @@
   .checkout-btn { width:100%; background:var(--maroon); color:white; border:none; padding:18px; font-family:'Nunito Sans',sans-serif; font-size:13px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; border-radius:4px; transition:background 0.2s; }
   .checkout-btn:hover { background:#6E1422; }
   .checkout-btn:disabled { background:var(--border); color:var(--muted); cursor:not-allowed; }
-
-  /* ORDER FORM */
   .order-modal-backdrop { display:none; position:fixed; inset:0; background:rgba(28,8,8,0.6); z-index:400; align-items:center; justify-content:center; }
   .order-modal-backdrop.open { display:flex; }
   .order-modal { background:var(--ivory); max-width:540px; width:94%; max-height:94vh; overflow-y:auto; padding:48px; position:relative; border-radius:8px; animation:slideUp 0.28s ease; box-shadow:0 24px 80px rgba(28,8,8,0.25); }
@@ -189,8 +226,6 @@
   .submit-btn { width:100%; background:var(--saffron); color:white; border:none; padding:18px; font-family:'Nunito Sans',sans-serif; font-size:13px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; border-radius:4px; transition:background 0.2s; margin-top:4px; }
   .submit-btn:hover { background:#CF621E; }
   .submit-btn:disabled { background:var(--border); color:var(--muted); cursor:not-allowed; }
-
-  /* SUCCESS */
   .success-backdrop { display:none; position:fixed; inset:0; background:rgba(28,8,8,0.65); z-index:500; align-items:center; justify-content:center; }
   .success-backdrop.open { display:flex; }
   .success-modal { background:var(--ivory); max-width:440px; width:90%; padding:56px 48px; text-align:center; border-radius:8px; animation:slideUp 0.28s ease; box-shadow:0 24px 80px rgba(28,8,8,0.25); }
@@ -198,11 +233,9 @@
   .success-modal h2 { font-family:'Playfair Display',serif; font-size:32px; font-weight:700; color:var(--maroon); margin-bottom:12px; }
   .success-modal p { font-size:14px; color:var(--muted); line-height:1.7; margin-bottom:32px; }
   .success-close-btn { background:var(--maroon); color:white; border:none; padding:14px 40px; font-family:'Nunito Sans',sans-serif; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; font-weight:700; border-radius:4px; }
-
   .toast { position:fixed; bottom:32px; left:50%; transform:translateX(-50%) translateY(80px); background:var(--maroon); color:white; padding:13px 28px; font-size:13px; letter-spacing:0.04em; z-index:600; transition:transform 0.3s ease; white-space:nowrap; border-radius:4px; font-weight:600; box-shadow:0 8px 24px rgba(139,26,43,0.35); }
   .toast.show { transform:translateX(-50%) translateY(0); }
   .empty-state { grid-column:1/-1; padding:80px 20px; text-align:center; color:var(--muted); font-family:'Playfair Display',serif; font-size:20px; font-style:italic; }
-
   @media(max-width:640px) {
     .header-inner { padding:0 20px; }
     .hero { padding:48px 20px 44px; }
@@ -212,24 +245,29 @@
     .catalog { grid-template-columns:repeat(2,1fr); gap:12px; }
     .cart-sidebar { width:100%; right:-100%; }
     .order-modal { padding:32px 24px; }
+    .loader-logo { font-size:28px; }
   }
 </style>
 </head>
 <body>
 
+<!-- ── LOADER ──────────────────────────────────────── -->
 <div class="page-loader" id="pageLoader">
-  <div class="loader-logo">Ishin</div>
-  <div class="loader-sub">by BRND.ME</div>
-  <div class="loader-bar"><div class="loader-bar-fill"></div></div>
-  <div class="loader-text" id="loaderText">Loading collection...</div>
+  <div class="loader-float-container" id="loaderFloatContainer"></div>
+  <div class="loader-center">
+    <div class="loader-logo">Ishin</div>
+    <div class="loader-sub">by BRND.ME</div>
+    <div class="loader-bar">
+      <div class="loader-bar-fill" id="loaderBarFill"></div>
+    </div>
+    <div class="loader-text" id="loaderText">Loading collection...</div>
+  </div>
 </div>
 
 <div class="error-banner" id="errorBanner">
   ⚠️ <span id="errorMsg">Could not load catalog. Check configuration.</span>
 </div>
-
 <div class="top-bar">Exclusive Influencer Gifting Program &nbsp;◆&nbsp; Ishin × BRND.ME</div>
-
 <header>
   <div class="header-inner">
     <div class="header-left">
@@ -246,7 +284,6 @@
     </button>
   </div>
 </header>
-
 <div class="hero">
   <div class="hero-deco"></div>
   <div class="hero-content">
@@ -262,8 +299,6 @@
     </div>
   </div>
 </div>
-
-<!-- DUAL FILTER BAR: Gender + Category -->
 <div class="filters-bar">
   <div class="filter-row">
     <span class="filter-label">Gender</span>
@@ -281,7 +316,6 @@
     <button class="filter-pill" onclick="setFilter('category','Fusion',this)">Fusion</button>
   </div>
 </div>
-
 <div class="catalog-wrap">
   <div class="catalog-header">
     <div class="catalog-title">Available Styles</div>
@@ -339,26 +373,14 @@
     <button class="success-close-btn" onclick="resetAll()">Back to Catalog</button>
   </div>
 </div>
-
 <div class="toast" id="toast"></div>
 
 <script>
-// ╔══════════════════════════════════════════════════════════════╗
-// ║                    CONFIGURATION                            ║
-// ╠══════════════════════════════════════════════════════════════╣
+// ── CONFIG ────────────────────────────────────────────
 const SHEET_ID        = '1I5h28_DuDituBAQbdHX_rz4RFNPzA8pflzYrmrOTLnE';
 const API_KEY         = 'AIzaSyDAkVIC8G7v8wrZdfvZBMzd5dpHCTMPfg4';
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzcbIUkcFTYvQhStF43kB-AYO_tnPI4779Z5uWtpTE05DXi4WAfR6JMW5po22McYyaW/exec';
-// ╚══════════════════════════════════════════════════════════════╝
 
-// Master_Catalog column mapping (0-indexed, A=0)
-// A=STYLE_ID(0) B=SKU_ID(1) C=BRAND(2) D=PARENT_ZSKU(3) E=CHILD_ZSKU(4)
-// F=SIZE(5) G=GENDER(6) H=CATEGORY(7) I=PRODUCT_TITLE(8)
-// J=IMAGE_LINK_1(9) K=IMAGE_LINK_2(10) L=IMAGE_LINK_3(11)
-// M=BANGALORE_INVENTORY(12) N=GURGAON_INVENTORY(13) O=TOTAL_INVENTORY(14)
-// P=EFF_BLR(15) Q=EFF_GGN(16) R=EFF_TOTAL(17)
-// S=STYLE_COGS(18) T=SKU_LIFETIME_SALES(19)
-// U=AUTO_ELIGIBLE(20) V=MANUAL_OVERRIDE(21) W=FINAL_SHOW(22)
 const COL = {
   STYLE_ID:0, SKU_ID:1, BRAND:2, PARENT_ZSKU:3, CHILD_ZSKU:4,
   SIZE:5, GENDER:6, CATEGORY:7, TITLE:8,
@@ -368,19 +390,79 @@ const COL = {
   COGS:18, SALES:19,
   AUTO_ELIGIBLE:20, MANUAL_OVERRIDE:21, FINAL_SHOW:22
 };
-
-const SHEET_RANGE  = 'Master_Catalog!A2:W';
+const SHEET_RANGE = 'Master_Catalog!A2:W';
 const emojis = ['👗','🪷','🌸','🎋','🌺','🪻','✨','🌼','🦚','🌿'];
 
 // ── State ──
-let allStyles   = [];   // grouped by styleId, only FINAL_SHOW=YES
-let cart        = [];
-let currentStyle = null;
+let allStyles     = [];
+let cart          = [];
+let currentStyle  = null;
 let activeFilters = { gender:'all', category:'all' };
 
-// ════════════════════════════════════════════════════════════════
-// FETCH FROM GOOGLE SHEETS
-// ════════════════════════════════════════════════════════════════
+// ── LOADER PROGRESS ───────────────────────────────────
+// Animates the bar from 0 → target% over duration ms
+function animateBar(targetPct, durationMs) {
+  const fill  = document.getElementById('loaderBarFill');
+  if (!fill) return;
+  fill.style.transition = `width ${durationMs}ms ease`;
+  fill.style.width      = targetPct + '%';
+}
+
+function injectFloatingImages(imageUrls) {
+  const container = document.getElementById('loaderFloatContainer');
+  if (!container || !imageUrls.length) return;
+  const count = 10;
+  for (let i = 0; i < count; i++) {
+    const url = imageUrls[i % imageUrls.length];
+    if (!url) continue;
+    const img       = document.createElement('img');
+    img.className   = 'loader-float-img';
+    img.src         = url;
+    img.alt         = '';
+    const leftPct   = 4 + (i / count) * 88;
+    const duration  = 8 + Math.random() * 6;
+    const delay     = -(Math.random() * duration);
+    const rotStart  = -12 + Math.random() * 24;
+    const rotEnd    = rotStart + (-8 + Math.random() * 16);
+    img.style.cssText = [
+      `left:${leftPct}%`,
+      `--rot-start:${rotStart}deg`,
+      `--rot-end:${rotEnd}deg`,
+      `animation-duration:${duration}s`,
+      `animation-delay:${delay}s`,
+      `width:${100 + Math.random() * 50}px`,
+      `height:${130 + Math.random() * 50}px`,
+    ].join(';');
+    container.appendChild(img);
+  }
+}
+
+function hideLoader() {
+  const loader = document.getElementById('pageLoader');
+  // Snap bar to 100% then fade
+  animateBar(100, 300);
+  setTimeout(() => {
+    loader.classList.add('hide');
+    setTimeout(() => { loader.style.display = 'none'; }, 650);
+  }, 350);
+}
+
+// ── INIT: Promise.all — catalog + 3s minimum ──────────
+async function init() {
+  showSkeletons(true);
+  updateCart();
+
+  // Start bar crawling to 70% over 2.5s (reflects "in progress")
+  animateBar(70, 2500);
+
+  const minDelay    = new Promise(resolve => setTimeout(resolve, 3000));
+  const catalogLoad = fetchCatalog();   // returns when data is parsed + rendered
+
+  await Promise.all([minDelay, catalogLoad]);
+  hideLoader();
+}
+
+// ── FETCH CATALOG ─────────────────────────────────────
 async function fetchCatalog() {
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(SHEET_RANGE)}?key=${API_KEY}`;
   try {
@@ -394,19 +476,18 @@ async function fetchCatalog() {
     const rows = data.values || [];
     if (!rows.length) throw new Error('No data found in Master_Catalog sheet.');
 
-    // ── Parse + group by Style ID ──
-    // Only include rows where FINAL_SHOW = "YES"
-    const styleMap = {};
+    // Bump bar to 90% once data arrives
+    animateBar(90, 400);
+    document.getElementById('loaderText').textContent = 'Building collection...';
 
+    const styleMap = {};
     rows.forEach(row => {
       const finalShow = (row[COL.FINAL_SHOW] || '').trim().toUpperCase();
       if (finalShow !== 'YES') return;
-
       const styleId = (row[COL.STYLE_ID] || '').trim();
       const skuId   = (row[COL.SKU_ID]   || '').trim();
       const size    = (row[COL.SIZE]      || '').trim();
       if (!styleId || !skuId || !size) return;
-
       if (!styleMap[styleId]) {
         styleMap[styleId] = {
           styleId,
@@ -419,13 +500,11 @@ async function fetchCatalog() {
             (row[COL.IMG2] || '').trim(),
             (row[COL.IMG3] || '').trim()
           ].filter(Boolean),
-          sales:    parseInt(row[COL.SALES] || '0', 10),
-          sizes:    [],
-          skus:     []
+          sales:  parseInt(row[COL.SALES] || '0', 10),
+          sizes:  [],
+          skus:   []
         };
       }
-
-      // Add size only if not already added for this style
       if (!styleMap[styleId].sizes.includes(size)) {
         styleMap[styleId].sizes.push(size);
       }
@@ -433,29 +512,26 @@ async function fetchCatalog() {
     });
 
     allStyles = Object.values(styleMap);
+    if (!allStyles.length) throw new Error('No styles with FINAL_SHOW = YES found in Master_Catalog.');
 
-    if (!allStyles.length) {
-      throw new Error('No styles with FINAL_SHOW_ON_LANDING_PAGE = YES found in Master_Catalog.');
-    }
+    // Feed garment images into the floating animation
+    const imageUrls = allStyles.flatMap(s => s.images).filter(Boolean);
+    injectFloatingImages(imageUrls);
 
     const now = new Date();
     document.getElementById('lastUpdated').textContent =
       `Updated ${now.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' })}`;
 
-    hideLoader();
     renderCatalog();
 
   } catch (err) {
     console.error('Fetch error:', err);
     showError(`${err.message}`);
-    hideLoader();
     showSkeletons(false);
   }
 }
 
-// ════════════════════════════════════════════════════════════════
-// RENDER CATALOG
-// ════════════════════════════════════════════════════════════════
+// ── RENDER CATALOG ────────────────────────────────────
 function getFilteredStyles() {
   return allStyles.filter(p => {
     const genderMatch   = activeFilters.gender   === 'all' || p.gender   === activeFilters.gender;
@@ -463,18 +539,15 @@ function getFilteredStyles() {
     return genderMatch && categoryMatch;
   });
 }
-
 function renderCatalog() {
   const el   = document.getElementById('catalog');
   const list = getFilteredStyles();
   document.getElementById('catalogCount').textContent =
     `${list.length} style${list.length !== 1 ? 's' : ''} available`;
-
   if (!list.length) {
     el.innerHTML = `<div class="empty-state">No styles match this filter — try another combination.</div>`;
     return;
   }
-
   el.innerHTML = list.map((p, i) => {
     const inCart = cart.find(c => c.styleId === p.styleId);
     const emoji  = emojis[i % emojis.length];
@@ -482,7 +555,6 @@ function renderCatalog() {
       ? `<span class="badge badge-bestseller">Bestseller</span>`
       : p.sales < 100 && p.sales > 0
       ? `<span class="badge badge-gem">Hidden Gem</span>` : '';
-
     const imgEl = p.images[0]
       ? `<img class="card-image" src="${p.images[0]}" alt="${p.title}"
            onerror="this.outerHTML='<div class=card-image-placeholder><div class=placeholder-emoji>${emoji}</div><div class=placeholder-label>Ishin</div></div>'">`
@@ -490,7 +562,6 @@ function renderCatalog() {
            <div class="placeholder-emoji">${emoji}</div>
            <div class="placeholder-label">Ishin</div>
          </div>`;
-
     return `
       <div class="product-card" onclick="openSizeModal('${p.styleId}')">
         <div class="card-img-wrap">
@@ -513,20 +584,15 @@ function renderCatalog() {
       </div>`;
   }).join('');
 }
-
 function setFilter(type, value, btn) {
   activeFilters[type] = value;
-  // Update pill active state within that row only
   btn.closest('.filter-row').querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
   btn.classList.add('active');
   renderCatalog();
 }
 
-// ════════════════════════════════════════════════════════════════
-// SIZE MODAL WITH IMAGE CAROUSEL
-// ════════════════════════════════════════════════════════════════
+// ── SIZE MODAL ────────────────────────────────────────
 let carouselIdx = 0;
-
 function openSizeModal(styleId) {
   const p = allStyles.find(x => x.styleId === styleId);
   if (!p) return;
@@ -535,37 +601,29 @@ function openSizeModal(styleId) {
   const inCart = cart.find(c => c.styleId === p.styleId);
   const i      = allStyles.indexOf(p);
   const emoji  = emojis[i % emojis.length];
-
-  // Build carousel slides
   const slides = p.images.length > 0
     ? p.images.map(img => `
         <div class="carousel-slide">
           <img src="${img}" alt="${p.title}"
-               onerror="this.parentElement.innerHTML='<div class=placeholder-modal style=width:100%;height:100%;background:linear-gradient(160deg,#FBE8D8,#FDF3DC);display:flex;align-items:center;justify-content:center;font-size:72px>${emoji}</div>'">
+               onerror="this.parentElement.innerHTML='<div style=width:100%;height:100%;background:linear-gradient(160deg,#FBE8D8,#FDF3DC);display:flex;align-items:center;justify-content:center;font-size:72px>${emoji}</div>'">
         </div>`)
     : [`<div class="carousel-slide">
-          <div class="placeholder-modal" style="width:100%;height:100%;background:linear-gradient(160deg,#FBE8D8,#FDF3DC);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;">
+          <div style="width:100%;height:100%;background:linear-gradient(160deg,#FBE8D8,#FDF3DC);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;">
             <div style="font-size:72px">${emoji}</div>
             <div style="font-family:'Playfair Display',serif;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#C9952A;font-weight:600">Ishin</div>
           </div>
         </div>`];
-
   const dotsHtml = slides.length > 1
     ? `<div class="carousel-dots">${slides.map((_,i) =>
         `<button class="carousel-dot ${i===0?'active':''}" onclick="goToSlide(${i})"></button>`
       ).join('')}</div>` : '';
-
   const navHtml = slides.length > 1
     ? `<button class="carousel-btn prev" onclick="shiftCarousel(-1)">‹</button>
        <button class="carousel-btn next" onclick="shiftCarousel(1)">›</button>` : '';
-
   document.getElementById('modalContent').innerHTML = `
     <div class="carousel" id="carousel">
-      <div class="carousel-track" id="carouselTrack">
-        ${slides.join('')}
-      </div>
-      ${navHtml}
-      ${dotsHtml}
+      <div class="carousel-track" id="carouselTrack">${slides.join('')}</div>
+      ${navHtml}${dotsHtml}
     </div>
     <div class="modal-body">
       <div class="modal-style-id">${p.styleId} · ${p.brand}</div>
@@ -581,40 +639,28 @@ function openSizeModal(styleId) {
         ${inCart ? `Update Pick — Size ${inCart.size}` : 'Select a size to continue'}
       </button>
     </div>`;
-
   if (inCart) currentStyle._selectedSize = inCart.size;
   document.getElementById('sizeModal').classList.add('open');
 }
-
 function shiftCarousel(dir) {
-  const p = currentStyle;
-  if (!p) return;
-  carouselIdx = (carouselIdx + dir + p.images.length) % p.images.length;
+  if (!currentStyle) return;
+  carouselIdx = (carouselIdx + dir + currentStyle.images.length) % currentStyle.images.length;
   updateCarousel();
 }
-
-function goToSlide(idx) {
-  carouselIdx = idx;
-  updateCarousel();
-}
-
+function goToSlide(idx) { carouselIdx = idx; updateCarousel(); }
 function updateCarousel() {
   const track = document.getElementById('carouselTrack');
   if (track) track.style.transform = `translateX(-${carouselIdx * 100}%)`;
-  document.querySelectorAll('.carousel-dot').forEach((d, i) => {
-    d.classList.toggle('active', i === carouselIdx);
-  });
+  document.querySelectorAll('.carousel-dot').forEach((d, i) => d.classList.toggle('active', i === carouselIdx));
 }
-
 function selectSize(size, btn) {
   document.querySelectorAll('.modal-size-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
   currentStyle._selectedSize = size;
   const addBtn = document.getElementById('addToCartBtn');
-  addBtn.disabled = false;
+  addBtn.disabled    = false;
   addBtn.textContent = 'Add to My Picks →';
 }
-
 function addToCart() {
   if (!currentStyle || !currentStyle._selectedSize) return;
   const existing = cart.findIndex(c => c.styleId === currentStyle.styleId);
@@ -630,15 +676,12 @@ function addToCart() {
   else               { cart.push(item);        showToast('Added to picks!'); }
   closeModal(); updateCart(); renderCatalog();
 }
-
 function closeModal() {
   document.getElementById('sizeModal').classList.remove('open');
   currentStyle = null; carouselIdx = 0;
 }
 
-// ════════════════════════════════════════════════════════════════
-// CART
-// ════════════════════════════════════════════════════════════════
+// ── CART ──────────────────────────────────────────────
 function updateCart() {
   const count = cart.length;
   document.getElementById('cartCount').textContent = count;
@@ -666,14 +709,11 @@ function updateCart() {
   document.getElementById('cartSummary').textContent =
     `${count} style${count > 1 ? 's' : ''} selected · Complimentary gift`;
 }
-
 function removeFromCart(i)  { cart.splice(i,1); updateCart(); renderCatalog(); }
 function openCart()  { updateCart(); document.getElementById('cartSidebar').classList.add('open'); document.getElementById('cartBackdrop').classList.add('open'); }
 function closeCart() { document.getElementById('cartSidebar').classList.remove('open'); document.getElementById('cartBackdrop').classList.remove('open'); }
 
-// ════════════════════════════════════════════════════════════════
-// ORDER FORM
-// ════════════════════════════════════════════════════════════════
+// ── ORDER FORM ────────────────────────────────────────
 function openOrderForm() {
   closeCart();
   document.getElementById('orderSummaryBox').innerHTML = `
@@ -687,24 +727,19 @@ function openOrderForm() {
     </div>`;
   document.getElementById('orderModal').classList.add('open');
 }
-
 function closeOrderForm() { document.getElementById('orderModal').classList.remove('open'); }
-
 async function submitOrder() {
   const name    = document.getElementById('fieldName').value.trim();
   const phone   = document.getElementById('fieldPhone').value.trim();
   const address = document.getElementById('fieldAddress').value.trim();
   if (!name || !phone || !address) { showToast('Please fill in all fields'); return; }
-
   const btn = document.getElementById('submitBtn');
   btn.disabled = true; btn.textContent = 'Placing order...';
-
   const payload = {
     name, phone, address,
     timestamp: new Date().toLocaleString('en-IN', { timeZone:'Asia/Kolkata' }),
     items: cart.map(c => ({ styleId:c.styleId, skuId:c.skuId, title:c.title, size:c.size }))
   };
-
   try {
     await fetch(APPS_SCRIPT_URL, {
       method:'POST', mode:'no-cors',
@@ -712,12 +747,10 @@ async function submitOrder() {
       body: JSON.stringify(payload)
     });
   } catch(e) { console.error('Order submit error:', e); }
-
   btn.disabled = false; btn.textContent = 'Confirm & Place Order →';
   closeOrderForm();
   document.getElementById('successModal').classList.add('open');
 }
-
 function resetAll() {
   cart = [];
   document.getElementById('successModal').classList.remove('open');
@@ -725,9 +758,7 @@ function resetAll() {
   updateCart(); renderCatalog();
 }
 
-// ════════════════════════════════════════════════════════════════
-// HELPERS
-// ════════════════════════════════════════════════════════════════
+// ── HELPERS ───────────────────────────────────────────
 function showSkeletons(show) {
   const el = document.getElementById('catalog');
   if (show) {
@@ -742,32 +773,21 @@ function showSkeletons(show) {
       </div>`).join('');
   } else { el.innerHTML = ''; }
 }
-
-function hideLoader() {
-  setTimeout(() => {
-    document.getElementById('pageLoader').classList.add('hide');
-    setTimeout(() => document.getElementById('pageLoader').style.display='none', 500);
-  }, 600);
-}
-
 function showError(msg) {
   document.getElementById('errorMsg').textContent = msg;
   document.getElementById('errorBanner').classList.add('show');
 }
-
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2200);
 }
 
-document.getElementById('sizeModal').addEventListener('click', e => { if(e.target===e.currentTarget) closeModal(); });
+document.getElementById('sizeModal').addEventListener('click',  e => { if(e.target===e.currentTarget) closeModal(); });
 document.getElementById('orderModal').addEventListener('click', e => { if(e.target===e.currentTarget) closeOrderForm(); });
 
-// INIT
-showSkeletons(true);
-updateCart();
-fetchCatalog();
+// ── BOOT ──────────────────────────────────────────────
+init();
 </script>
 </body>
 </html>
