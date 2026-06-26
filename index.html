@@ -188,7 +188,7 @@
     .loader-logo { font-size:28px; }
   }
 
- .hub-btn {
+.hub-btn {
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -213,7 +213,6 @@
   color: rgba(255,255,255,0.95);
   transform: translateY(-1px);
 }
-/* Icon — SVG home shape */
 .hub-btn-icon {
   display: flex;
   align-items: center;
@@ -225,7 +224,6 @@
 .hub-btn:hover .hub-btn-icon {
   transform: scale(1.25) rotate(-8deg);
 }
-/* Ripple on click */
 .hub-btn::after {
   content: '';
   position: absolute;
@@ -240,26 +238,7 @@
   opacity: 1;
   transform: scale(1);
 }
-/* Light-bg variant — for portals with white/cream headers (BH, MP) */
-.hub-btn.light {
-  border-color: rgba(0,0,0,0.12);
-  background: rgba(0,0,0,0.04);
-  color: rgba(0,0,0,0.45);
-}
-.hub-btn.light:hover {
-  background: rgba(0,0,0,0.08);
-  border-color: rgba(0,0,0,0.25);
-  color: rgba(0,0,0,0.8);
-}
-.hub-btn.light::after {
-  background: radial-gradient(circle at center, rgba(0,0,0,0.08) 0%, transparent 70%);
-}
-@media(max-width:480px){
-  .hub-btn span.hub-btn-label { display: none; }
-  .hub-btn { padding: 7px; border-radius: 50%; }
-}
- 
-
+/* Ishin maroon tint override */
 .hub-btn {
   border-color: rgba(139,26,43,0.4);
   background: rgba(139,26,43,0.15);
@@ -272,6 +251,10 @@
 }
 .hub-btn::after {
   background: radial-gradient(circle at center, rgba(139,26,43,0.3) 0%, transparent 70%);
+}
+@media(max-width:480px){
+  .hub-btn span.hub-btn-label { display: none; }
+  .hub-btn { padding: 7px; border-radius: 50%; }
 }
 
 .other-brands-section {
@@ -379,20 +362,9 @@
   </div>
 </div>
 <div class="filters-bar">
-  <div class="filter-row">
-    <span class="filter-label">Gender</span>
-    <button class="filter-pill active" onclick="setFilter('gender','all',this)">All</button>
-    <button class="filter-pill" onclick="setFilter('gender','Women',this)">Women</button>
-    <button class="filter-pill" onclick="setFilter('gender','Men',this)">Men</button>
-  </div>
-  <div class="filter-row">
+  <div class="filter-row" id="categoryFilterRow">
     <span class="filter-label">Category</span>
-    <button class="filter-pill active" onclick="setFilter('category','all',this)">All Styles</button>
-    <button class="filter-pill" onclick="setFilter('category','Kurta Sets',this)">Kurta Sets</button>
-    <button class="filter-pill" onclick="setFilter('category','Co-ords',this)">Co-ords</button>
-    <button class="filter-pill" onclick="setFilter('category','Dresses',this)">Dresses</button>
-    <button class="filter-pill" onclick="setFilter('category','Festive',this)">Festive</button>
-    <button class="filter-pill" onclick="setFilter('category','Fusion',this)">Fusion</button>
+    <button class="filter-pill all-pill active" onclick="setFilter('category','all',this)">All Styles</button>
   </div>
 </div>
 <div class="catalog-wrap">
@@ -453,18 +425,10 @@
     <div class="other-brands-section" style="border-top-color:rgba(139,26,43,0.15);">
       <div class="other-brands-label" style="color:#9A8A80;">Explore other brands</div>
       <div class="other-brands-grid">
-        <a href="https://botanic-hearth-influencer-managemen.vercel.app/" class="brand-pill" target="_blank" style="color:#1A3D2B;border-color:#1A3D2B;background:rgba(26,61,43,0.07);">
-          <span class="brand-pill-dot" style="background:#1A3D2B;"></span>Botanic Hearth
-        </a>
-        <a href="https://majestic-pure-influencer-management.vercel.app/" class="brand-pill" target="_blank" style="color:#4A2D7A;border-color:#4A2D7A;background:rgba(74,45,122,0.07);">
-          <span class="brand-pill-dot" style="background:#4A2D7A;"></span>Majestic Pure
-        </a>
-        <a href="https://villain-influencer-management.vercel.app/" class="brand-pill" target="_blank" style="color:#C0392B;border-color:#C0392B;background:rgba(192,57,43,0.07);">
-          <span class="brand-pill-dot" style="background:#C0392B;"></span>Villain
-        </a>
-        <a href="https://my-fitness-influencer-management.vercel.app/" class="brand-pill" target="_blank" style="color:#E8732A;border-color:#E8732A;background:rgba(232,115,42,0.07);">
-          <span class="brand-pill-dot" style="background:#E8732A;"></span>MyFitness
-        </a>
+        <a href="https://botanic-hearth-influencer-managemen.vercel.app/" class="brand-pill" target="_blank" style="color:#1A3D2B;border-color:#1A3D2B;background:rgba(26,61,43,0.07);"><span class="brand-pill-dot" style="background:#1A3D2B;"></span>Botanic Hearth</a>
+        <a href="https://majestic-pure-influencer-management.vercel.app/" class="brand-pill" target="_blank" style="color:#4A2D7A;border-color:#4A2D7A;background:rgba(74,45,122,0.07);"><span class="brand-pill-dot" style="background:#4A2D7A;"></span>Majestic Pure</a>
+        <a href="https://villain-influencer-management.vercel.app/" class="brand-pill" target="_blank" style="color:#C0392B;border-color:#C0392B;background:rgba(192,57,43,0.07);"><span class="brand-pill-dot" style="background:#C0392B;"></span>Villain</a>
+        <a href="https://my-fitness-influencer-management.vercel.app/" class="brand-pill" target="_blank" style="color:#E8732A;border-color:#E8732A;background:rgba(232,115,42,0.07);"><span class="brand-pill-dot" style="background:#E8732A;"></span>MyFitness</a>
       </div>
     </div>
   </div>
@@ -493,7 +457,7 @@ const emojis = ['👗','🪷','🌸','🎋','🌺','🪻','✨','🌼','🦚','�
 let allStyles     = [];
 let cart          = [];
 let currentStyle  = null;
-let activeFilters = { gender:'all', category:'all' };
+let activeFilters = { category:'all' };
 
 
 
@@ -566,6 +530,8 @@ async function fetchCatalog() {
     document.getElementById('lastUpdated').textContent =
       `Updated ${now.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' })}`;
 
+    buildCategoryFilters();
+    buildCategoryFilters();
     renderCatalog();
 
   } catch (err) {
@@ -578,9 +544,31 @@ async function fetchCatalog() {
 // ── RENDER CATALOG ────────────────────────────────────
 function getFilteredStyles() {
   return allStyles.filter(p => {
-    const genderMatch   = activeFilters.gender   === 'all' || p.gender   === activeFilters.gender;
-    const categoryMatch = activeFilters.category === 'all' || p.category === activeFilters.category;
-    return genderMatch && categoryMatch;
+    return activeFilters.category === 'all' || p.category === activeFilters.category;
+  });
+}
+
+// Build category pills dynamically from catalog data
+function buildCategoryFilters() {
+  const seen = new Set();
+  const categories = [];
+  allStyles.forEach(p => {
+    if (p.category && !seen.has(p.category)) {
+      seen.add(p.category);
+      categories.push(p.category);
+    }
+  });
+  categories.sort();
+  const row = document.getElementById('categoryFilterRow');
+  // Keep the "All Styles" pill, remove any previously added dynamic pills
+  const existing = row.querySelectorAll('.filter-pill:not(.all-pill)');
+  existing.forEach(el => el.remove());
+  categories.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-pill';
+    btn.textContent = cat;
+    btn.onclick = function() { setFilter('category', cat, this); };
+    row.appendChild(btn);
   });
 }
 function renderCatalog() {
