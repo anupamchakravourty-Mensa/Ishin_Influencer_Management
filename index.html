@@ -274,6 +274,55 @@
   background: radial-gradient(circle at center, rgba(139,26,43,0.3) 0%, transparent 70%);
 }
 
+.other-brands-section {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(0,0,0,0.08);
+}
+.other-brands-label {
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 500;
+  margin-bottom: 14px;
+}
+.other-brands-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+.brand-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 20px;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  border: 1.5px solid;
+  transition: transform 0.18s, box-shadow 0.18s, opacity 0.18s;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.brand-pill:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+  opacity: 0.9;
+}
+.brand-pill-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+@media(max-width:480px){
+  .other-brands-grid { gap: 6px; }
+  .brand-pill { padding: 7px 12px; font-size: 11px; }
+}
+
 </style>
 </head>
 <body>
@@ -401,6 +450,23 @@
     <h2>Order Placed!</h2>
     <p>Your Ishin picks are confirmed. Our team will reach out with shipping details shortly. Thank you for being a part of the Ishin story!</p>
     <button class="success-close-btn" onclick="resetAll()">Back to Catalog</button>
+    <div class="other-brands-section" style="border-top-color:rgba(139,26,43,0.15);">
+      <div class="other-brands-label" style="color:#9A8A80;">Explore other brands</div>
+      <div class="other-brands-grid">
+        <a href="https://botanic-hearth-influencer-managemen.vercel.app/" class="brand-pill" target="_blank" style="color:#1A3D2B;border-color:#1A3D2B;background:rgba(26,61,43,0.07);">
+          <span class="brand-pill-dot" style="background:#1A3D2B;"></span>Botanic Hearth
+        </a>
+        <a href="https://majestic-pure-influencer-management.vercel.app/" class="brand-pill" target="_blank" style="color:#4A2D7A;border-color:#4A2D7A;background:rgba(74,45,122,0.07);">
+          <span class="brand-pill-dot" style="background:#4A2D7A;"></span>Majestic Pure
+        </a>
+        <a href="https://villain-influencer-management.vercel.app/" class="brand-pill" target="_blank" style="color:#C0392B;border-color:#C0392B;background:rgba(192,57,43,0.07);">
+          <span class="brand-pill-dot" style="background:#C0392B;"></span>Villain
+        </a>
+        <a href="https://my-fitness-influencer-management.vercel.app/" class="brand-pill" target="_blank" style="color:#E8732A;border-color:#E8732A;background:rgba(232,115,42,0.07);">
+          <span class="brand-pill-dot" style="background:#E8732A;"></span>MyFitness
+        </a>
+      </div>
+    </div>
   </div>
 </div>
 <div class="toast" id="toast"></div>
